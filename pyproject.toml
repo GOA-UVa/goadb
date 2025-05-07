@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools>=58.1.0", "wheel", "setuptools_scm[toml]>=6.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "goadb"
+dynamic = ["version"]
+description = "goadb creates an abstraction for storing data inside a database."
+readme = "README.md"
+authors = [
+    { name = "Javier Gatón Herguedas", email = "gaton@goa.uva.es" },
+]
+maintainers = [
+    { name = "Javier Gatón Herguedas", email = "gaton@goa.uva.es" },
+]
+requires-python = ">=3.9"
+classifiers=[
+    "Private :: Do Not Upload",
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Database :: Database Engines/Servers",
+]
+dependencies = [
+    "pandas~=2.0",
+    "SQLAlchemy~=2.0",
+]
+
+[project.optional-dependencies]
+mysql = ["pymysql"] # MIT
+mariadb = ["mariadb"] # LGPL
+mysqlclient = ["mysqlclient~=2.0"] # GPL
+mysqlconnector = ["mysql-connector-python"] # GPL
+dev = ["pre-commit", "tox", "interrogate"]
+
+[project.urls]
+Homepage = "https://goa.uva.es"
+Repository = "https://gitlab.com/goa-uva/goadb.git"
+
+[tool.setuptools.packages.find]
+where = [""]
+include = ["goadb*"]
+
+[tool.setuptools_scm]
+root = "."
+fallback_version = "1"
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "goadb/_version.py"
+versionfile_build = "goadb/_version.py"
+tag_prefix = ""
+parentdir_prefix = ""
+
+[tool.flake8]
+exclude = ["docs"]
+max-line-length = 120
+extend-ignore = ["W291"]
+
+[tool.mypy]
+allow_untyped_globals = true
+ignore_missing_imports = true
+
+[tool.mypy-setup]
+ignore_errors = true
+
+[tool.mypy-tests]
+ignore_errors = true
+
+[tool.mypy-versioneer]
+ignore_errors = true
