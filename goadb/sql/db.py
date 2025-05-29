@@ -1,5 +1,5 @@
 """Access the MySQL database."""
-from typing import Union, List
+from typing import Union, List, Callable
 from urllib.parse import quote_plus
 import importlib.util
 
@@ -127,6 +127,7 @@ class DataBase:
         self,
         df: pd.DataFrame,
         table: str,
+        ignore: bool = True,
     ) -> int:
         """Inserts the given DataFrame into the DB in the table `table`.
 
@@ -139,6 +140,8 @@ class DataBase:
             so reset the index beforehand if it's an SQL column that is expected to be inserted.
         table: str
             Name of the table that will contain the dataframe rows.
+        ignore: bool
+            Behaviour in case of colition. Ignore or update. By default ignore.
 
         Returns
         -------
@@ -148,17 +151,22 @@ class DataBase:
             connectable which may not reflect the exact number of written rows as stipulated
             in SQLAlchemy.
         """
-
-        def _insert_multi_ignore(
-            other, conn: sqlalchemy.Connection, keys: list[str], data_iter
-        ) -> int:
+        def _get_inserter(ignore_inserter: bool) -> Callable:
             from sqlalchemy import insert
-
-            data = [dict(zip(keys, row)) for row in data_iter]
-            stmt = insert(other.table).values(data)
-            stmt = stmt.prefix_with("IGNORE", dialect="mysql")
-            result = conn.execute(stmt)
-            return result.rowcount
+            def _inserter(
+                other, conn: sqlalchemy.Connection, keys: list[str], data_iter
+            ) -> int:
+                data = [dict(zip(keys, row)) for row in data_iter]
+                stmt = insert(other.table).values(data)
+                if ignore_inserter:
+                    stmt = stmt.prefix_with("IGNORE", dialect="mysql")
+                else:
+                    stmt = stmt.on_duplicate_key_update(
+                        data=stmt.inserted.data, status="U"
+                    )
+                result = conn.execute(stmt)
+                return result.rowcount
+            return _inserter
 
         if df.empty:
             return 0
@@ -171,7 +179,7 @@ class DataBase:
                 engine,
                 if_exists="append",
                 index=False,
-                method=_insert_multi_ignore,
+                method=_get_inserter(ignore),
             )
         return inserts
 
