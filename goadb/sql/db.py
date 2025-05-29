@@ -184,7 +184,7 @@ class DataBase:
         return inserts
 
 
-def insert_dataframe(df: pd.DataFrame, config: DBConfig, table: str) -> int:
+def insert_dataframe(df: pd.DataFrame, config: DBConfig, table: str, ignore: bool = True) -> int:
     """Insert the dataframe `df` in the table `table` in the database specified in `config`.
     
     Parameters
@@ -196,6 +196,8 @@ def insert_dataframe(df: pd.DataFrame, config: DBConfig, table: str) -> int:
         Configuration used to connect to the database.
     table: str
         Name of the table that will contain the dataframe rows.
+    ignore: bool
+        Behaviour in case of colition. Ignore or update. By default ignore.
 
     Returns
     -------
@@ -206,4 +208,4 @@ def insert_dataframe(df: pd.DataFrame, config: DBConfig, table: str) -> int:
         in SQLAlchemy.
     """
     db = DataBase(config)
-    return db.insert_dataframe(df, table)
+    return db.insert_dataframe(df, table, ignore)
