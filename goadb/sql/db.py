@@ -162,9 +162,7 @@ class DataBase:
                 if ignore_inserter:
                     stmt = stmt.prefix_with("IGNORE", dialect="mysql")
                 else:
-                    stmt = stmt.on_duplicate_key_update(
-                        data=stmt.inserted.data, status="U"
-                    )
+                    stmt = stmt.on_duplicate_key_update({key: stmt.inserted[key] for key in keys})
                 result = conn.execute(stmt)
                 return result.rowcount
             return _inserter
