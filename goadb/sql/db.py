@@ -152,12 +152,13 @@ class DataBase:
             in SQLAlchemy.
         """
         def _get_inserter(ignore_inserter: bool) -> Callable:
-            from sqlalchemy import insert
+            from sqlalchemy.dialects.mysql.dml import Insert
+
             def _inserter(
                 other, conn: sqlalchemy.Connection, keys: list[str], data_iter
             ) -> int:
                 data = [dict(zip(keys, row)) for row in data_iter]
-                stmt = insert(other.table).values(data)
+                stmt = Insert(other.table).values(data)
                 if ignore_inserter:
                     stmt = stmt.prefix_with("IGNORE", dialect="mysql")
                 else:
