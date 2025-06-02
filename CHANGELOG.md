@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [//]: # "## [unreleased] - yyyy-mm-dd"
 
+## [0.0.2] - 2025-06-02
+
+### Added
+
+- SQL DB supports upserts, and now it's the default behaviour, instead of ignore duplicates.
+
 ## [0.0.1] - 2025-05-09
 
 Initial version that serves as the baseline for tracking changes in the change log.
 
 
-[unreleased]: https://github.com/LIME-ESA/lime_tbx/compare/v0.0.1...HEAD
-[0.0.1]: https://github.com/LIME-ESA/lime_tbx/releases/tag/v0.0.1
+[unreleased]: https://gitlab.com/goa-uva/goadb/-/compare/v0.0.2...HEAD
+[0.0.2]: https://gitlab.com/goa-uva/goadb/-/compare/v0.0.1...v0.0.2
+[0.0.1]: https://gitlab.com/goa-uva/goadb/-/releases/v0.0.1
