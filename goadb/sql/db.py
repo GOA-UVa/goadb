@@ -95,6 +95,7 @@ class DataBase(IDataBase):
         """Runs a query for the current database.
 
         Runs the given query for the database configured in the DataBase object.
+        It understands (replaces) "'None'" as "NULL".
 
         Parameters
         ----------
@@ -108,6 +109,7 @@ class DataBase(IDataBase):
             integer with the amount of modified rows otherwise.
         """
         log = logging.getLogger(__name__)
+        query = query.replace("'None'", "NULL")
         engine = self._get_engine()
         if query.strip().upper().startswith("SELECT"):
             data = pd.read_sql(query, engine)
