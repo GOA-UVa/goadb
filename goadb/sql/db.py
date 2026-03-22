@@ -2,6 +2,7 @@
 from typing import Union, List, Callable
 from urllib.parse import quote_plus
 import importlib.util
+import logging
 
 import sqlalchemy
 import sqlalchemy.exc
@@ -106,6 +107,7 @@ class DataBase(IDataBase):
             DataFrame with the result of the query if it is a SELECT query,
             integer with the amount of modified rows otherwise.
         """
+        log = logging.getLogger(__name__)
         engine = self._get_engine()
         if query.strip().upper().startswith("SELECT"):
             data = pd.read_sql(query, engine)
@@ -117,11 +119,9 @@ class DataBase(IDataBase):
                     conn.commit()  # write effectively in the database
                     data = res.rowcount
             except sqlalchemy.exc.IntegrityError as err:
-                msg = f"Duplicate Entry: {err}"
-                print(msg)
+                log.error(f"Duplicate Entry: {err}")
             except sqlalchemy.exc.InterfaceError as err:
-                msg = f"Error: {err} on query: {query}. (Error: {err})"
-                print(msg)
+                log.error(f"Error: {err} on query: {query}. (Error: {err})")
         return data
 
     def insert_dataframe(
