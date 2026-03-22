@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [//]: # "## [unreleased] - yyyy-mm-dd"
 
+## [unreleased] - yyyy-mm-dd
+
+### Added
+
+- Common interface `IDataBase` for database backend implementations.
+- Support for a `callback_iter` parameter in `insert_dataframe`, called
+  after each batch insert with the number of rows processed so far.
+- Configurable batch size `chunk_size` for inserts, allowing tuning
+  of performance and lock behavior (default 4000).
+- Automatic conversion of string `'None'` to `NULL` in SQL queries
+  for better compatibility with pandas‑generated queries.
+
+### Changed
+- Logging: replaced `print` statements with standard Python logging.
+
 ## [0.0.2] - 2025-06-02
 
 ### Added
