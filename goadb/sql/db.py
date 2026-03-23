@@ -2,12 +2,14 @@
 from typing import Union, List, Callable
 from urllib.parse import quote_plus
 import importlib.util
+import logging
 
 import sqlalchemy
 import sqlalchemy.exc
 import pandas as pd
 
 from goadb.sql.models import DBConfig
+from goadb.common.interface import IDataBase
 
 
 _MYSQL_DRIVERS= [
@@ -52,7 +54,7 @@ def _get_sql_engine(cf: DBConfig) -> sqlalchemy.Engine:
     return sqlalchemy.create_engine(url)
 
 
-class DataBase:
+class DataBase(IDataBase):
     """Representation of a mysql database using sqlalchemy logic down below.
 
     Attributes
@@ -93,6 +95,7 @@ class DataBase:
         """Runs a query for the current database.
 
         Runs the given query for the database configured in the DataBase object.
+        It understands (replaces) "'None'" as "NULL".
 
         Parameters
         ----------
@@ -105,6 +108,8 @@ class DataBase:
             DataFrame with the result of the query if it is a SELECT query,
             integer with the amount of modified rows otherwise.
         """
+        log = logging.getLogger(__name__)
+        query = query.replace("'None'", "NULL")
         engine = self._get_engine()
         if query.strip().upper().startswith("SELECT"):
             data = pd.read_sql(query, engine)
@@ -116,11 +121,9 @@ class DataBase:
                     conn.commit()  # write effectively in the database
                     data = res.rowcount
             except sqlalchemy.exc.IntegrityError as err:
-                msg = f"Duplicate Entry: {err}"
-                print(msg)
+                log.error(f"Duplicate Entry: {err}")
             except sqlalchemy.exc.InterfaceError as err:
-                msg = f"Error: {err} on query: {query}. (Error: {err})"
-                print(msg)
+                log.error(f"Error: {err} on query: {query}. (Error: {err})")
         return data
 
     def insert_dataframe(
@@ -128,10 +131,12 @@ class DataBase:
         df: pd.DataFrame,
         table: str,
         ignore: bool = True,
+        callback_iter: Callable = None,
+        chunk_size: int = 4000,
     ) -> int:
         """Inserts the given DataFrame into the DB in the table `table`.
 
-        It will do it in multiple commits of size 10000.
+        It will do it in multiple commits of size `chunk_size`.
 
         Parameters
         ----------
@@ -142,6 +147,12 @@ class DataBase:
             Name of the table that will contain the dataframe rows.
         ignore: bool
             Behaviour in case of colition. Ignore or update. By default ignore.
+        callback_iter: Callable
+            If defined, callback that will be called with the accumulated number of rows sent
+            to the database. The callback will be called each time a new chunk insertion is
+            performed.
+        chunk_size: int
+            Chunk insertion size. By default it's 4000.
 
         Returns
         -------
@@ -171,8 +182,10 @@ class DataBase:
             return 0
         engine = self._get_engine()
         inserts = 0
-        step = 200
+        step = int(chunk_size)
         for i in range(0, len(df), step):
+            if callback_iter:
+                callback_iter(i)
             inserts += df.iloc[i : i + step].to_sql(
                 table,
                 engine,

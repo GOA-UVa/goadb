@@ -16,7 +16,7 @@ maintainers = [
 requires-python = ">=3.9"
 classifiers=[
     "Private :: Do Not Upload",
-    "Development Status :: 1 - Planning",
+    "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Operating System :: Microsoft :: Windows",
@@ -35,11 +35,12 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-mysql = ["pymysql"] # MIT
+mysql = ["pymysql"] # Default, MIT
+pymysql = ["pymysql"] # MIT
 mariadb = ["mariadb"] # LGPL
 mysqlclient = ["mysqlclient~=2.0"] # GPL
 mysqlconnector = ["mysql-connector-python"] # GPL
-dev = ["pre-commit", "tox", "interrogate"]
+dev = ["pre-commit", "tox", "interrogate", "pytest"]
 
 [project.urls]
 Homepage = "https://goa.uva.es"
@@ -48,6 +49,12 @@ Repository = "https://gitlab.com/goa-uva/goadb.git"
 [tool.setuptools.packages.find]
 where = [""]
 include = ["goadb*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
 
 [tool.setuptools_scm]
 root = "."
