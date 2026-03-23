@@ -7,6 +7,8 @@ name = "goadb"
 dynamic = ["version"]
 description = "goadb creates an abstraction for storing data inside a database."
 readme = "README.md"
+license = "LGPL-3.0-only"
+license-files = ["LICENSE"]
 authors = [
     { name = "Javier Gatón Herguedas", email = "gaton@goa.uva.es" },
 ]
@@ -43,8 +45,9 @@ mysqlconnector = ["mysql-connector-python"] # GPL
 dev = ["pre-commit", "tox", "interrogate", "pytest"]
 
 [project.urls]
-Homepage = "https://goa.uva.es"
+Homepage = "https://gitlab.com/goa-uva/goadb"
 Repository = "https://gitlab.com/goa-uva/goadb.git"
+Issues = "https://gitlab.com/goa-uva/goadb/issues"
 
 [tool.setuptools.packages.find]
 where = [""]
