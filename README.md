@@ -1,8 +1,8 @@
 # goadb
 
-[![PyPI version](https://badge.fury.io/py/goadb.svg)](https://badge.fury.io/py/goadb)
+[![PyPI version](https://badge.fury.io/py/goadb.svg)](https://pypi.org/project/goadb/)
 [![Python versions](https://img.shields.io/pypi/pyversions/goadb.svg)](https://pypi.org/project/goadb/)
-[![License](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.html)
+[![License](https://img.shields.io/badge/License-LGPL%20v3-informational)](https://www.gnu.org/licenses/lgpl-3.0.html)
 
 `goadb` provides a common, SQL‑inspired interface for storing and retrieving data from different backends.
 The library abstracts away the specifics of the underlying storage system, allowing you to write data access
