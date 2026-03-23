@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   of performance and lock behavior (default 4000).
 - Automatic conversion of string `'None'` to `NULL` in SQL queries
   for better compatibility with pandas‑generated queries.
+- Created `tests` with simple unit tests for the package.
 
 ### Changed
 - Logging: replaced `print` statements with standard Python logging.
