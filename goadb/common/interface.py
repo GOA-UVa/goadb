@@ -1,10 +1,10 @@
 from typing import Union, Callable
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 import pandas as pd
 
 
-class IDataBase:
+class IDataBase(ABC):
     """Representation of a database. Abstract interface."""
 
     @abstractmethod
