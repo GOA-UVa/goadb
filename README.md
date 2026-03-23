@@ -4,11 +4,14 @@
 [![Python versions](https://img.shields.io/pypi/pyversions/goadb.svg)](https://pypi.org/project/goadb/)
 [![License](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0.html)
 
-`goadb` is a lightweight abstraction layer over [SQLAlchemy](https://www.sqlalchemy.org/) designed to simplify
-working with relational databases, especially MySQL. It provides a clean interface for running queries and
-inserting `pandas` DataFrames, with built‑in support for batch inserts, and callbacks.
+`goadb` provides a common, SQL‑inspired interface for storing and retrieving data from different backends.
+The library abstracts away the specifics of the underlying storage system, allowing you to write data access
+code that can work with databases, file‑based formats, or other storage solutions without changing your application logic.
 
-The library is database‑agnostic in theory, but currently focuses on MySQL.
+Currently, `goadb` ships with a MySQL backend built on [SQLAlchemy](https://www.sqlalchemy.org/), making it
+easy to run queries, insert `pandas` DataFrames, and handle large batches with progress callbacks.
+The design is intentionally backend‑agnostic, and future versions may include support for other formats such as Parquet files.
+
 It does not bundle any MySQL driver, you choose the one that fits your project's license and performance requirements.
 
 ## Features
